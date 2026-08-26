@@ -2,555 +2,1398 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="theme-color" content="#166534">
-<title>MMS Academy Payment System</title>
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta name="theme-color" content="#2563eb">
+
+<title>MMS Academy - Payments</title>
 
 <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
 
 <style>
-*{box-sizing:border-box}
+*{
+  box-sizing:border-box
+}
+
 body{
-  margin:0;min-height:100vh;font-family:Arial,Helvetica,sans-serif;
-  background:linear-gradient(135deg,#f0fdf4,#f8fafc);color:#1f2937
+  margin:0;
+  min-height:100vh;
+  font-family:Arial,Helvetica,sans-serif;
+  background:linear-gradient(135deg,#eff6ff,#f8fafc);
+  color:#1f2937;
 }
-.container{width:100%;max-width:620px;margin:auto;padding:20px}
+
+.container{
+  width:100%;
+  max-width:720px;
+  margin:auto;
+  padding:18px;
+}
+
 .header{
-  background:linear-gradient(135deg,#166534,#14532d);color:white;
-  padding:28px 20px;border-radius:22px;text-align:center;
-  box-shadow:0 8px 25px rgba(20,83,45,.20);margin-bottom:18px
+  background:linear-gradient(135deg,#2563eb,#1e3a8a);
+  color:white;
+  padding:28px 20px;
+  border-radius:24px;
+  text-align:center;
+  box-shadow:0 10px 30px rgba(30,58,138,.18);
+  margin-bottom:18px;
 }
-.logo{font-size:42px;margin-bottom:5px}
-.header h1{margin:0;font-size:28px}
-.header p{margin:8px 0 0;opacity:.9}
+
+.logo{
+  font-size:44px
+}
+
+.header h1{
+  margin:0;
+  font-size:27px
+}
+
+.header p{
+  margin:8px 0 0;
+  opacity:.9
+}
+
 .card{
-  background:white;padding:20px;border-radius:20px;margin-bottom:18px;
-  box-shadow:0 5px 20px rgba(0,0,0,.06)
+  background:white;
+  padding:20px;
+  border-radius:20px;
+  margin-bottom:18px;
+  box-shadow:0 5px 20px rgba(0,0,0,.06);
 }
-label{display:block;font-weight:700;margin-bottom:7px}
-input,select,textarea{
-  width:100%;padding:14px;border:1px solid #d1d5db;border-radius:12px;
-  font-size:16px;margin-bottom:15px;outline:none;font-family:inherit
-}
-textarea{min-height:90px;resize:vertical}
-input:focus,select:focus,textarea:focus{border-color:#166534}
+
 button{
-  width:100%;padding:16px;border:none;border-radius:13px;font-size:17px;
-  font-weight:700;cursor:pointer;transition:.15s ease
+  width:100%;
+  padding:15px;
+  border:0;
+  border-radius:13px;
+  font-size:16px;
+  font-weight:800;
+  cursor:pointer;
 }
-button:active{transform:scale(.98)}
-.start{background:#166534;color:white}
-.stop{background:#dc2626;color:white;display:none;margin-top:10px}
-.record{background:#15803d;color:white}
-.record:disabled{background:#94a3b8;cursor:not-allowed}
-#reader{width:100%;margin-top:18px;overflow:hidden;border-radius:16px}
+
+.start{
+  background:#2563eb;
+  color:white;
+}
+
+.stop{
+  background:#dc2626;
+  color:white;
+  display:none;
+  margin-top:10px;
+}
+
+.find{
+  background:#1e3a8a;
+  color:white;
+}
+
+.save{
+  background:#16a34a;
+  color:white;
+  margin-top:18px;
+}
+
+#reader{
+  width:100%;
+  margin-top:16px;
+  overflow:hidden;
+  border-radius:16px;
+}
+
 .status{
-  display:none;padding:15px;border-radius:13px;margin-top:15px;
-  text-align:center;font-weight:700;line-height:1.5
+  display:none;
+  padding:14px;
+  border-radius:13px;
+  margin-top:14px;
+  text-align:center;
+  font-weight:700;
+  line-height:1.5;
 }
-.status.info{display:block;background:#dcfce7;color:#166534}
-.status.success{display:block;background:#dcfce7;color:#166534}
-.status.warning{display:block;background:#fef3c7;color:#92400e}
-.status.error{display:block;background:#fee2e2;color:#991b1b}
-.student{display:none;text-align:center}
-.student-icon{font-size:55px}
-.student-name{color:#166534;font-size:27px;font-weight:800;margin-top:8px}
-.student-info{color:#64748b;margin-top:7px}
-.payment-section{display:none}
-.amount-row{
-  background:#f0fdf4;border:1px solid #bbf7d0;border-radius:15px;
-  padding:15px;margin-bottom:15px
+
+.status.info{
+  display:block;
+  background:#dbeafe;
+  color:#1e40af;
 }
-.amount-label{font-size:13px;color:#166534;font-weight:700}
+
+.status.success{
+  display:block;
+  background:#dcfce7;
+  color:#166534;
+}
+
+.status.error{
+  display:block;
+  background:#fee2e2;
+  color:#991b1b;
+}
+
+.divider{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  margin:18px 0;
+  color:#94a3b8;
+  font-weight:800;
+}
+
+.divider::before,
+.divider::after{
+  content:"";
+  flex:1;
+  height:1px;
+  background:#e5e7eb;
+}
+
+label{
+  display:block;
+  font-weight:800;
+  margin-bottom:7px;
+}
+
+input,
+select,
+textarea{
+  width:100%;
+  padding:14px;
+  border:1px solid #d1d5db;
+  border-radius:12px;
+  font-size:16px;
+  margin-bottom:12px;
+  font-family:inherit;
+}
+
+textarea{
+  min-height:90px;
+  resize:vertical;
+}
+
+.student-name{
+  text-align:center;
+  font-size:28px;
+  font-weight:900;
+  color:#1d4ed8;
+}
+
+.student-meta{
+  text-align:center;
+  color:#64748b;
+  margin-top:5px;
+}
+
+.stats{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:12px;
+  margin-top:18px;
+}
+
+.stat{
+  background:#eff6ff;
+  border:1px solid #bfdbfe;
+  border-radius:16px;
+  padding:15px;
+  text-align:center;
+}
+
+.stat-label{
+  font-size:12px;
+  color:#64748b;
+  font-weight:800;
+}
+
+.stat-value{
+  font-size:21px;
+  font-weight:900;
+  color:#1e3a8a;
+  margin-top:6px;
+}
+
+.paid{
+  color:#166534 !important;
+}
+
 .remaining{
-  background:#f8fafc;border-radius:12px;padding:12px;margin:4px 0 15px;
-  text-align:center;font-weight:700
+  color:#b45309 !important;
 }
-.small{text-align:center;color:#64748b;font-size:13px;margin-top:10px}
-.footer{text-align:center;color:#94a3b8;font-size:12px;padding-bottom:20px}
-.divider{text-align:center;color:#94a3b8;margin:18px 0}
+
+.section-title{
+  font-size:21px;
+  font-weight:900;
+  margin-bottom:14px;
+}
+
+.hidden{
+  display:none;
+}
+
+.small{
+  text-align:center;
+  color:#64748b;
+  font-size:13px;
+  margin-top:10px;
+}
+
+.footer{
+  text-align:center;
+  color:#94a3b8;
+  font-size:12px;
+  padding-bottom:20px;
+}
+
+@media(max-width:480px){
+
+  .stats{
+    grid-template-columns:1fr 1fr;
+  }
+}
 </style>
 </head>
 
 <body>
+
 <div class="container">
 
-<div class="header">
-  <div class="logo">💰</div>
-  <h1>MMS ACADEMY</h1>
-  <p>Payment System</p>
-</div>
+  <div class="header">
 
-<div class="card">
-  <label>Received By</label>
-  <input id="receivedBy" type="text" placeholder="Enter teacher/cashier name" autocomplete="name">
+    <div class="logo">💳</div>
 
-  <button id="startButton" class="start" onclick="startScanner()">📷 START PAYMENT SCANNING</button>
-  <button id="stopButton" class="stop" onclick="stopScanner()">⛔ STOP SCANNING</button>
+    <h1>MMS ACADEMY</h1>
 
-  <div id="reader"></div>
-  <div id="status" class="status"></div>
+    <p>Payment Management</p>
 
-  <div class="small">Scan the student's QR code to load their payment information.</div>
-</div>
-
-<div id="studentCard" class="card student">
-  <div class="student-icon">👨‍🎓</div>
-  <div id="studentName" class="student-name"></div>
-  <div id="studentId" class="student-info"></div>
-  <div id="studentLevel" class="student-info"></div>
-</div>
-
-<div id="paymentSection" class="card payment-section">
-
-  <div class="amount-row">
-    <div class="amount-label">MONTHLY FEE</div>
-    <div id="monthlyFeeDisplay" style="font-size:24px;font-weight:800;margin-top:5px">0 EGP</div>
   </div>
 
-  <label>Month</label>
-  <select id="paymentMonth"></select>
 
-  <label>Amount to Pay (EGP)</label>
-  <input id="amount" type="number" min="0" step="0.01" placeholder="Enter amount">
+  <!-- FIND STUDENT -->
 
-  <div id="paymentSummary" class="remaining">
-    Checking previous payments...
+  <div class="card">
+
+    <button
+      id="startButton"
+      class="start"
+      onclick="startScanner()"
+    >
+      📷 SCAN STUDENT QR
+    </button>
+
+
+    <button
+      id="stopButton"
+      class="stop"
+      onclick="stopScanner()"
+    >
+      ⛔ STOP SCANNING
+    </button>
+
+
+    <div id="reader"></div>
+
+
+    <div class="divider">
+      OR
+    </div>
+
+
+    <label>
+      Enter Student ID
+    </label>
+
+    <input
+      id="manualId"
+      placeholder="Example: HAG-302"
+      autocomplete="off"
+    >
+
+
+    <button
+      class="find"
+      onclick="findById()"
+    >
+      🔎 FIND STUDENT
+    </button>
+
+
+    <div
+      id="status"
+      class="status"
+    ></div>
+
   </div>
 
-  <label>Payment Method</label>
-  <select id="paymentMethod">
-    <option value="Cash">Cash</option>
-    <option value="Bank Transfer">Bank Transfer</option>
-    <option value="Card">Card</option>
-    <option value="Other">Other</option>
-  </select>
 
-  <label>Notes (Optional)</label>
-  <textarea id="notes" placeholder="Optional payment notes"></textarea>
+  <!-- STUDENT -->
 
-  <button id="recordButton" class="record" onclick="recordPayment()">💰 RECORD PAYMENT</button>
-  <div class="small">The monthly fee is read directly from Students!G. You can change the amount if needed.</div>
+  <div
+    id="studentCard"
+    class="card hidden"
+  >
+
+    <div
+      id="studentName"
+      class="student-name"
+    ></div>
+
+    <div
+      id="studentLevel"
+      class="student-meta"
+    ></div>
+
+    <div
+      id="studentId"
+      class="student-meta"
+    ></div>
+
+
+    <div class="stats">
+
+      <div class="stat">
+
+        <div class="stat-label">
+          MONTHLY FEE
+        </div>
+
+        <div
+          id="monthlyFee"
+          class="stat-value"
+        ></div>
+
+      </div>
+
+
+      <div class="stat">
+
+        <div class="stat-label">
+          PAID SO FAR
+        </div>
+
+        <div
+          id="paidSoFar"
+          class="stat-value paid"
+        ></div>
+
+      </div>
+
+
+      <div class="stat">
+
+        <div class="stat-label">
+          LAST PAYMENT
+        </div>
+
+        <div
+          id="lastPayment"
+          class="stat-value"
+          style="font-size:16px"
+        ></div>
+
+      </div>
+
+
+      <div class="stat">
+
+        <div class="stat-label">
+          CURRENT MONTH PAID
+        </div>
+
+        <div
+          id="currentMonthPaid"
+          class="stat-value"
+          style="font-size:16px"
+        ></div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <!-- PAYMENT -->
+
+  <div
+    id="paymentCard"
+    class="card hidden"
+  >
+
+    <div class="section-title">
+      💰 Record Payment
+    </div>
+
+
+    <label>
+      Amount Paid
+    </label>
+
+    <input
+      id="amount"
+      type="number"
+      min="1"
+      step="0.01"
+      placeholder="Enter amount"
+    >
+
+
+    <label>
+      Payment Method
+    </label>
+
+    <select id="paymentMethod">
+
+      <option value="Cash">
+        Cash
+      </option>
+
+      <option value="Bank Transfer">
+        Bank Transfer
+      </option>
+
+      <option value="Card">
+        Card
+      </option>
+
+      <option value="PayPal">
+        PayPal
+      </option>
+
+      <option value="Other">
+        Other
+      </option>
+
+    </select>
+
+
+    <label>
+      Payment Month
+    </label>
+
+    <input
+      id="month"
+      placeholder="Example: 08/2026"
+    >
+
+
+    <label>
+      Received By
+    </label>
+
+    <input
+      id="receivedBy"
+      placeholder="Teacher / Staff name"
+    >
+
+
+    <label>
+      Notes
+    </label>
+
+    <textarea
+      id="notes"
+      placeholder="Optional payment notes"
+    ></textarea>
+
+
+    <button
+      class="save"
+      onclick="savePayment()"
+    >
+      💾 SAVE PAYMENT
+    </button>
+
+  </div>
+
+
+  <div class="footer">
+    MMS Academy • Payment Management
+  </div>
+
 </div>
 
-<div class="footer">MMS Academy • Payment System</div>
-
-</div>
 
 <script>
+
 const BACKEND_URL =
-  "https://script.google.com/macros/s/AKfycbwx9Selm8_W6HfRJdV52atYR-ZSeb-w4Z6qBqlrAXaknRwzvWl1SspM0tUOg9GvaDfw2w/exec";
+  "https://script.google.com/macros/s/AKfycbxG3uW7K4FfxlW7fME9J-IMYXzicbnaMCua74FRP9QMSkuY41IenAFwO_PJ4voTPG_xQQ/exec";
+
 
 const APP_TOKEN =
   "MMS-QR-2026-Cairo-7Kx9P2vL4nQ8-ATTD-6Fz3R";
 
+
 let scanner = null;
+
 let scannerRunning = false;
-let currentStudent = null;
+
 let processingScan = false;
-let checkingPayments = false;
 
-document.addEventListener("DOMContentLoaded", function() {
-  const savedTeacher = localStorage.getItem("mms_payment_received_by");
-  if (savedTeacher) document.getElementById("receivedBy").value = savedTeacher;
+let currentStudent = null;
 
-  document.getElementById("receivedBy").addEventListener("input", function() {
-    localStorage.setItem("mms_payment_received_by", this.value);
-  });
 
-  populateMonths();
-});
+/* =========================================================
+   SCANNER
+   ========================================================= */
 
-function populateMonths() {
-  const select = document.getElementById("paymentMonth");
-  const now = new Date();
-  const currentYear = now.getFullYear();
-  const currentMonth = now.getMonth();
+async function startScanner(){
 
-  select.innerHTML = "";
-
-  for (let offset = -2; offset <= 6; offset++) {
-    const d = new Date(currentYear, currentMonth + offset, 1);
-    const value =
-      String(d.getMonth() + 1).padStart(2, "0") + "/" + d.getFullYear();
-
-    const option = document.createElement("option");
-    option.value = value;
-    option.textContent = d.toLocaleString("en-US", {
-      month: "long",
-      year: "numeric"
-    });
-
-    if (offset === 0) option.selected = true;
-    select.appendChild(option);
-  }
-
-  select.addEventListener("change", function() {
-    if (currentStudent) loadPaymentSummary(currentStudent.id, this.value);
-  });
-}
-
-async function startScanner() {
-  if (scannerRunning) return;
-
-  if (!window.isSecureContext) {
-    showStatus(
-      "error",
-      "❌ Camera access requires HTTPS.<br><br>Open the GitHub Pages HTTPS URL, not a local file."
-    );
+  if(scannerRunning){
     return;
   }
 
-  clearStatus();
 
-  try {
-    showStatus("info", "📷 Requesting camera permission...");
+  if(!window.isSecureContext){
 
-    scanner = new Html5Qrcode("reader");
-
-    await scanner.start(
-      { facingMode: "environment" },
-      {
-        fps: 10,
-        qrbox: { width: 250, height: 250 },
-        aspectRatio: 1.7777778
-      },
-      onScanSuccess,
-      onScanFailure
+    showStatus(
+      "error",
+      "❌ Camera access requires HTTPS."
     );
 
+    return;
+  }
+
+
+  try{
+
+    showStatus(
+      "info",
+      "📷 Requesting camera permission..."
+    );
+
+
+    scanner =
+      new Html5Qrcode(
+        "reader"
+      );
+
+
+    const cameras =
+      await Html5Qrcode.getCameras();
+
+
+    if(
+      !cameras ||
+      !cameras.length
+    ){
+
+      throw new Error(
+        "No camera was found."
+      );
+    }
+
+
+    let selected =
+      cameras[0];
+
+
+    const preferred =
+      cameras.find(
+        function(c){
+
+          const label =
+            String(
+              c.label || ""
+            ).toLowerCase();
+
+
+          return (
+            label.includes("back") ||
+            label.includes("rear") ||
+            label.includes("environment")
+          );
+        }
+      );
+
+
+    if(preferred){
+      selected = preferred;
+    }
+
+
+    await scanner.start(
+
+      selected.id,
+
+      {
+        fps:10,
+
+        qrbox:{
+          width:250,
+          height:250
+        },
+
+        aspectRatio:1.7777778
+      },
+
+      onScanSuccess,
+
+      function(){}
+    );
+
+
     scannerRunning = true;
-    document.getElementById("startButton").style.display = "none";
-    document.getElementById("stopButton").style.display = "block";
 
-    showStatus("info", "📷 Camera ready. Point it at the student's QR code.");
-  } catch (error) {
-    console.error("Camera error:", error);
 
-    scannerRunning = false;
-    document.getElementById("startButton").style.display = "block";
-    document.getElementById("stopButton").style.display = "none";
+    document
+      .getElementById(
+        "startButton"
+      )
+      .style.display =
+        "none";
 
-    showStatus("error", "❌ Could not access the camera.<br><br>" + String(error.message || error));
+
+    document
+      .getElementById(
+        "stopButton"
+      )
+      .style.display =
+        "block";
+
+
+    showStatus(
+      "info",
+      "📷 Camera ready. Point it at the student's QR code."
+    );
+
+
+  }catch(error){
+
+    console.error(error);
+
+
+    showStatus(
+      "error",
+      "❌ Could not access the camera.<br><br>" +
+      String(
+        error.message || error
+      )
+    );
   }
 }
 
-async function stopScanner() {
-  if (!scanner) return;
 
-  try {
-    if (scannerRunning) await scanner.stop();
-  } catch (error) {
-    console.error(error);
+async function stopScanner(){
+
+  if(!scanner){
+    return;
   }
 
-  try {
+
+  try{
+
+    if(scannerRunning){
+      await scanner.stop();
+    }
+
+  }catch(e){}
+
+
+  try{
     await scanner.clear();
-  } catch (error) {
-    console.error(error);
-  }
+  }catch(e){}
+
 
   scanner = null;
+
   scannerRunning = false;
 
-  document.getElementById("startButton").style.display = "block";
-  document.getElementById("stopButton").style.display = "none";
+
+  document
+    .getElementById(
+      "startButton"
+    )
+    .style.display =
+      "block";
+
+
+  document
+    .getElementById(
+      "stopButton"
+    )
+    .style.display =
+      "none";
 }
 
-async function onScanSuccess(decodedText) {
-  if (processingScan) return;
+
+async function onScanSuccess(
+  decodedText
+){
+
+  if(processingScan){
+    return;
+  }
+
 
   processingScan = true;
 
-  const studentId = String(decodedText || "").trim();
-  console.log("QR SCANNED:", studentId);
 
   await stopScanner();
 
-  if (!studentId) {
+
+  loadStudent(
+    String(
+      decodedText || ""
+    ).trim()
+  );
+}
+
+
+/* =========================================================
+   MANUAL ID
+   ========================================================= */
+
+function findById(){
+
+  const id =
+    document
+      .getElementById(
+        "manualId"
+      )
+      .value
+      .trim();
+
+
+  loadStudent(id);
+}
+
+
+/* =========================================================
+   LOAD STUDENT
+   ========================================================= */
+
+function loadStudent(
+  studentId
+){
+
+  studentId =
+    String(
+      studentId || ""
+    ).trim();
+
+
+  if(!studentId){
+
+    showStatus(
+      "error",
+      "❌ Enter a Student ID or scan a QR code."
+    );
+
     processingScan = false;
-    showStatus("error", "❌ QR code is empty.");
+
     return;
   }
 
-  findStudentForPayment(studentId);
-}
 
-function onScanFailure(errorMessage) {
-  // Normal QR misses are ignored.
-}
+  showStatus(
+    "info",
+    "⏳ Loading payment information..."
+  );
 
-function findStudentForPayment(studentId) {
-  showStatus("info", "⏳ Finding student...");
+
+  /*
+   * First find the student.
+   */
 
   jsonpRequest(
+
     "find",
-    { studentId: studentId },
-    function(response) {
-      if (!response || !response.success) {
+
+    {
+      studentId:
+        studentId
+    },
+
+    function(response){
+
+      if(
+        !response ||
+        !response.success
+      ){
+
         processingScan = false;
+
+
         showStatus(
           "error",
-          "❌ " + ((response && response.message) || "Student not found.")
+          "❌ " +
+          (
+            response &&
+            response.message
+              ? response.message
+              : "Student not found."
+          )
         );
+
         return;
       }
 
-      currentStudent = response.student;
 
-      displayStudent(currentStudent);
+      currentStudent =
+        response.student;
 
-      const monthlyFee = parseMoney(currentStudent.monthlyFee);
 
-      document.getElementById("monthlyFeeDisplay").textContent =
-        formatMoney(monthlyFee) + " EGP";
+      renderStudent(
+        response.student
+      );
 
-      document.getElementById("amount").value =
-        monthlyFee > 0 ? monthlyFee : "";
 
-      document.getElementById("paymentSection").style.display = "block";
+      /*
+       * Now ask the backend to
+       * SUM ALL PAYMENTS.
+       */
+
+      loadPaymentSummary(
+        response.student.id
+      );
+    }
+  );
+}
+
+
+/* =========================================================
+   PAYMENT SUMMARY
+   ========================================================= */
+
+function loadPaymentSummary(
+  studentId
+){
+
+  /*
+   * Use the current month only
+   * for the optional currentMonthPaid
+   * calculation.
+   */
+
+  const now =
+    new Date();
+
+
+  const month =
+    String(
+      now.getMonth() + 1
+    ).padStart(2,"0") +
+    "/" +
+    now.getFullYear();
+
+
+  jsonpRequest(
+
+    "paymentsummary",
+
+    {
+
+      studentId:
+        studentId,
+
+      month:
+        month
+    },
+
+    function(response){
 
       processingScan = false;
 
-      loadPaymentSummary(
-        currentStudent.id,
-        document.getElementById("paymentMonth").value
-      );
 
-      showStatus(
-        "success",
-        "🟢 Student found. Payment details are ready."
-      );
-    }
-  );
-}
+      if(
+        !response ||
+        !response.success
+      ){
 
-function loadPaymentSummary(studentId, month) {
-  checkingPayments = true;
-  document.getElementById("recordButton").disabled = true;
-  document.getElementById("paymentSummary").textContent =
-    "Checking previous payments...";
-
-  jsonpRequest(
-    "paymentSummary",
-    {
-      studentId: studentId,
-      month: month
-    },
-    function(response) {
-      checkingPayments = false;
-
-      if (!response || !response.success) {
-        document.getElementById("paymentSummary").textContent =
-          "Could not check previous payments.";
-
-        document.getElementById("recordButton").disabled = false;
-        return;
-      }
-
-      const fee = parseMoney(currentStudent.monthlyFee);
-      const paid = Number(response.totalPaid) || 0;
-      const remaining = Math.max(0, fee - paid);
-
-      if (fee > 0) {
-        document.getElementById("paymentSummary").innerHTML =
-          "Paid so far: <strong>" + formatMoney(paid) +
-          " EGP</strong><br>Remaining: <strong>" +
-          formatMoney(remaining) + " EGP</strong>";
-      } else {
-        document.getElementById("paymentSummary").innerHTML =
-          "Paid so far: <strong>" + formatMoney(paid) + " EGP</strong>";
-      }
-
-      if (fee > 0 && remaining > 0) {
-        document.getElementById("amount").value = remaining;
-      } else if (fee > 0 && remaining === 0) {
-        document.getElementById("amount").value = "";
-        showStatus(
-          "warning",
-          "⚠️ This student has already paid the full monthly fee for " + month + "."
-        );
-      }
-
-      document.getElementById("recordButton").disabled = false;
-    }
-  );
-}
-
-function recordPayment() {
-  if (!currentStudent) {
-    showStatus("error", "❌ Scan a student QR code first.");
-    return;
-  }
-
-  const amount = Number(document.getElementById("amount").value);
-  const paymentMethod = document.getElementById("paymentMethod").value;
-  const month = document.getElementById("paymentMonth").value;
-  const receivedBy =
-    document.getElementById("receivedBy").value.trim() || "Teacher";
-  const notes = document.getElementById("notes").value.trim();
-
-  if (!amount || amount <= 0) {
-    showStatus("error", "❌ Enter a valid payment amount.");
-    return;
-  }
-
-  const button = document.getElementById("recordButton");
-  button.disabled = true;
-
-  showStatus("info", "⏳ Recording payment...");
-
-  jsonpRequest(
-    "payment",
-    {
-      studentId: currentStudent.id,
-      amount: amount,
-      paymentMethod: paymentMethod,
-      month: month,
-      receivedBy: receivedBy,
-      notes: notes
-    },
-    function(response) {
-      button.disabled = false;
-
-      if (!response || !response.success) {
         showStatus(
           "error",
-          "❌ " + ((response && response.message) || "Payment could not be recorded.")
+          "❌ Could not load payment history."
         );
+
         return;
       }
 
+
+      /*
+       * THIS is the important value.
+       *
+       * totalPaid comes from ALL
+       * matching Payment tab rows.
+       */
+
+      document
+        .getElementById(
+          "paidSoFar"
+        )
+        .textContent =
+          formatMoney(
+            response.totalPaid
+          ) +
+          " EGP";
+
+
+      document
+        .getElementById(
+          "currentMonthPaid"
+        )
+        .textContent =
+          formatMoney(
+            response.currentMonthPaid
+          ) +
+          " EGP";
+
+
+      document
+        .getElementById(
+          "lastPayment"
+        )
+        .textContent =
+          response.student.lastPayment ||
+          "No payment yet";
+
+
+      document
+        .getElementById(
+          "paymentCard"
+        )
+        .classList
+        .remove("hidden");
+
+
       showStatus(
         "success",
-        "🟢 PAYMENT RECORDED<br>" +
-        currentStudent.name +
-        "<br>" +
-        formatMoney(amount) +
-        " EGP • " +
-        month +
-        "<br>Payment ID: " +
-        response.paymentId
+        "✅ Student payment information loaded."
+      );
+    }
+  );
+}
+
+
+/* =========================================================
+   RENDER STUDENT
+   ========================================================= */
+
+function renderStudent(
+  student
+){
+
+  document
+    .getElementById(
+      "studentCard"
+    )
+    .classList
+    .remove("hidden");
+
+
+  document
+    .getElementById(
+      "studentName"
+    )
+    .textContent =
+      student.name || "";
+
+
+  document
+    .getElementById(
+      "studentLevel"
+    )
+    .textContent =
+      "Level: " +
+      (
+        student.level || "—"
       );
 
-      currentStudent.lastPayment =
-        response.paymentDate || new Date().toLocaleDateString("en-GB");
 
-      loadPaymentSummary(currentStudent.id, month);
-      document.getElementById("notes").value = "";
+  document
+    .getElementById(
+      "studentId"
+    )
+    .textContent =
+      "Student ID: " +
+      student.id;
+
+
+  document
+    .getElementById(
+      "monthlyFee"
+    )
+    .textContent =
+      formatMoney(
+        student.monthlyFee
+      ) +
+      " EGP";
+
+
+  document
+    .getElementById(
+      "lastPayment"
+    )
+    .textContent =
+      student.lastPayment ||
+      "No payment yet";
+}
+
+
+/* =========================================================
+   SAVE PAYMENT
+   ========================================================= */
+
+function savePayment(){
+
+  if(!currentStudent){
+
+    showStatus(
+      "error",
+      "❌ Please select a student first."
+    );
+
+    return;
+  }
+
+
+  const amount =
+    document
+      .getElementById(
+        "amount"
+      )
+      .value;
+
+
+  const paymentMethod =
+    document
+      .getElementById(
+        "paymentMethod"
+      )
+      .value;
+
+
+  const month =
+    document
+      .getElementById(
+        "month"
+      )
+      .value
+      .trim();
+
+
+  const receivedBy =
+    document
+      .getElementById(
+        "receivedBy"
+      )
+      .value
+      .trim();
+
+
+  const notes =
+    document
+      .getElementById(
+        "notes"
+      )
+      .value
+      .trim();
+
+
+  if(
+    !amount ||
+    Number(amount) <= 0
+  ){
+
+    showStatus(
+      "error",
+      "❌ Enter a valid payment amount."
+    );
+
+    return;
+  }
+
+
+  if(!month){
+
+    showStatus(
+      "error",
+      "❌ Enter the payment month."
+    );
+
+    return;
+  }
+
+
+  showStatus(
+    "info",
+    "⏳ Saving payment..."
+  );
+
+
+  jsonpRequest(
+
+    "payment",
+
+    {
+
+      studentId:
+        currentStudent.id,
+
+      amount:
+        amount,
+
+      paymentMethod:
+        paymentMethod,
+
+      month:
+        month,
+
+      receivedBy:
+        receivedBy,
+
+      notes:
+        notes
+    },
+
+    function(response){
+
+      if(
+        !response ||
+        !response.success
+      ){
+
+        showStatus(
+          "error",
+          "❌ " +
+          (
+            response &&
+            response.message
+              ? response.message
+              : "Could not save payment."
+          )
+        );
+
+        return;
+      }
+
+
+      /*
+       * Backend returns the NEW
+       * total paid from ALL payments.
+       */
+
+      document
+        .getElementById(
+          "paidSoFar"
+        )
+        .textContent =
+          formatMoney(
+            response.totalPaid
+          ) +
+          " EGP";
+
+
+      document
+        .getElementById(
+          "lastPayment"
+        )
+        .textContent =
+          response.paymentDate;
+
+
+      /*
+       * Clear fields.
+       */
+
+      document
+        .getElementById(
+          "amount"
+        )
+        .value = "";
+
+
+      document
+        .getElementById(
+          "notes"
+        )
+        .value = "";
+
+
+      showStatus(
+        "success",
+        "✅ Payment saved successfully.<br>" +
+        "Total paid so far: " +
+        formatMoney(
+          response.totalPaid
+        ) +
+        " EGP"
+      );
     }
   );
 }
 
-function parseMoney(value) {
-  if (value === null || value === undefined || value === "") return 0;
 
-  if (typeof value === "number") {
-    return Number.isFinite(value) ? value : 0;
-  }
+/* =========================================================
+   JSONP
+   ========================================================= */
 
-  let text = String(value).trim().replace(/[^\d,.\-]/g, "");
-  if (!text) return 0;
+function jsonpRequest(
+  action,
+  params,
+  callback
+){
 
-  if (text.includes(",") && text.includes(".")) {
-    text = text.replace(/,/g, "");
-  } else if (text.includes(",")) {
-    const parts = text.split(",");
-    if (parts.length === 2 && parts[1].length <= 2) {
-      text = parts[0] + "." + parts[1];
-    } else {
-      text = text.replace(/,/g, "");
-    }
-  }
-
-  const number = Number(text);
-  return Number.isFinite(number) ? number : 0;
-}
-
-function displayStudent(student) {
-  document.getElementById("studentCard").style.display = "block";
-  document.getElementById("studentName").textContent = student.name || "";
-  document.getElementById("studentId").textContent =
-    "Student ID: " + (student.id || "");
-  document.getElementById("studentLevel").textContent =
-    "Level: " + (student.level || "");
-
-  console.log(
-    "Student loaded:",
-    student.id,
-    "Monthly Fee from Students!G:",
-    parseMoney(student.monthlyFee),
-    "Last Payment from Students!H:",
-    student.lastPayment || "None"
-  );
-}
-
-function formatMoney(value) {
-  return Number(value || 0).toLocaleString("en-US", {
-    maximumFractionDigits: 2
-  });
-}
-
-function jsonpRequest(action, params, callback) {
   const callbackName =
     "mmsPaymentCallback_" +
     Date.now() +
     "_" +
-    Math.floor(Math.random() * 100000);
+    Math.floor(
+      Math.random() * 100000
+    );
 
-  let script = null;
 
-  window[callbackName] = function(data) {
-    try {
-      callback(data);
-    } finally {
-      delete window[callbackName];
+  const script =
+    document.createElement(
+      "script"
+    );
 
-      if (script && script.parentNode) {
-        script.parentNode.removeChild(script);
+
+  window[callbackName] =
+    function(data){
+
+      try{
+
+        callback(data);
+
+      }finally{
+
+        delete window[
+          callbackName
+        ];
+
+
+        if(
+          script &&
+          script.parentNode
+        ){
+
+          script.parentNode
+            .removeChild(
+              script
+            );
+        }
       }
+    };
+
+
+  const query =
+    new URLSearchParams();
+
+
+  query.set(
+    "action",
+    action
+  );
+
+
+  query.set(
+    "token",
+    APP_TOKEN
+  );
+
+
+  query.set(
+    "callback",
+    callbackName
+  );
+
+
+  Object.keys(
+    params || {}
+  ).forEach(
+    function(key){
+
+      query.set(
+        key,
+        params[key]
+      );
     }
-  };
+  );
 
-  const query = new URLSearchParams();
 
-  query.set("action", action);
-  query.set("token", APP_TOKEN);
-  query.set("callback", callbackName);
+  script.src =
+    BACKEND_URL +
+    "?" +
+    query.toString();
 
-  Object.keys(params || {}).forEach(function(key) {
-    query.set(key, params[key]);
-  });
 
-  script = document.createElement("script");
+  script.onerror =
+    function(){
 
-  script.src = BACKEND_URL + "?" + query.toString();
+      delete window[
+        callbackName
+      ];
 
-  script.onerror = function() {
-    delete window[callbackName];
 
-    if (script && script.parentNode) {
-      script.parentNode.removeChild(script);
+      if(
+        script.parentNode
+      ){
+
+        script.parentNode
+          .removeChild(
+            script
+          );
+      }
+
+
+      processingScan = false;
+
+
+      showStatus(
+        "error",
+        "❌ Could not connect to MMS backend."
+      );
+    };
+
+
+  document.body.appendChild(
+    script
+  );
+}
+
+
+/* =========================================================
+   HELPERS
+   ========================================================= */
+
+function formatMoney(
+  value
+){
+
+  return Number(
+    value || 0
+  ).toLocaleString(
+    "en-US",
+    {
+      maximumFractionDigits:2
     }
-
-    showStatus("error", "❌ Could not connect to MMS backend.");
-  };
-
-  document.body.appendChild(script);
+  );
 }
 
-function showStatus(type, message) {
-  const status = document.getElementById("status");
-  status.className = "status " + type;
-  status.innerHTML = message;
-  status.style.display = "block";
+
+function showStatus(
+  type,
+  message
+){
+
+  const el =
+    document.getElementById(
+      "status"
+    );
+
+
+  el.className =
+    "status " +
+    type;
+
+
+  el.innerHTML =
+    message;
+
+
+  el.style.display =
+    "block";
 }
 
-function clearStatus() {
-  const status = document.getElementById("status");
-  status.style.display = "none";
-  status.innerHTML = "";
-}
 </script>
+
 </body>
 </html>
