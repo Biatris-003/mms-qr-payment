@@ -130,7 +130,7 @@ button:active{transform:scale(.98)}
   <textarea id="notes" placeholder="Optional payment notes"></textarea>
 
   <button id="recordButton" class="record" onclick="recordPayment()">💰 RECORD PAYMENT</button>
-  <div class="small">The amount is automatically suggested from the student's monthly fee, but you can change it.</div>
+  <div class="small">The monthly fee is read directly from Students!G. You can change the amount if needed.</div>
 </div>
 
 <div class="footer">MMS Academy • Payment System</div>
@@ -139,7 +139,7 @@ button:active{transform:scale(.98)}
 
 <script>
 const BACKEND_URL =
-  "https://script.google.com/macros/s/AKfycbyln4OWZ0v3seqETGN7rDJel1ngK5wY6G5A6oBsSRjzFWOlQYPVcSHVcwck25YZ4LPMQw/exec";
+  "https://script.google.com/macros/s/AKfycbxa_aLUuEqyuuXHfZtpFeoGH7wT9RLIn49qYz2-Oy-KoA5dpH1EWS7r53YMvpMuZMcqRA/exec";
 
 const APP_TOKEN =
   "MMS-QR-2026-Cairo-7Kx9P2vL4nQ8-ATTD-6Fz3R";
@@ -300,7 +300,7 @@ function findStudentForPayment(studentId) {
 
       displayStudent(currentStudent);
 
-      const monthlyFee = Number(currentStudent.monthlyFee) || 0;
+      const monthlyFee = parseMoney(currentStudent.monthlyFee);
 
       document.getElementById("monthlyFeeDisplay").textContent =
         formatMoney(monthlyFee) + " EGP";
@@ -348,7 +348,7 @@ function loadPaymentSummary(studentId, month) {
         return;
       }
 
-      const fee = Number(currentStudent.monthlyFee) || 0;
+      const fee = parseMoney(currentStudent.monthlyFee);
       const paid = Number(response.totalPaid) || 0;
       const remaining = Math.max(0, fee - paid);
 
@@ -433,10 +433,38 @@ function recordPayment() {
         response.paymentId
       );
 
+      currentStudent.lastPayment =
+        response.paymentDate || new Date().toLocaleDateString("en-GB");
+
       loadPaymentSummary(currentStudent.id, month);
       document.getElementById("notes").value = "";
     }
   );
+}
+
+function parseMoney(value) {
+  if (value === null || value === undefined || value === "") return 0;
+
+  if (typeof value === "number") {
+    return Number.isFinite(value) ? value : 0;
+  }
+
+  let text = String(value).trim().replace(/[^\d,.\-]/g, "");
+  if (!text) return 0;
+
+  if (text.includes(",") && text.includes(".")) {
+    text = text.replace(/,/g, "");
+  } else if (text.includes(",")) {
+    const parts = text.split(",");
+    if (parts.length === 2 && parts[1].length <= 2) {
+      text = parts[0] + "." + parts[1];
+    } else {
+      text = text.replace(/,/g, "");
+    }
+  }
+
+  const number = Number(text);
+  return Number.isFinite(number) ? number : 0;
 }
 
 function displayStudent(student) {
@@ -446,6 +474,15 @@ function displayStudent(student) {
     "Student ID: " + (student.id || "");
   document.getElementById("studentLevel").textContent =
     "Level: " + (student.level || "");
+
+  console.log(
+    "Student loaded:",
+    student.id,
+    "Monthly Fee from Students!G:",
+    parseMoney(student.monthlyFee),
+    "Last Payment from Students!H:",
+    student.lastPayment || "None"
+  );
 }
 
 function formatMoney(value) {
